@@ -1,0 +1,580 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>رحلة تحدي الرياضيات</title><style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial,sans-serif;background:linear-gradient(160deg,#e8f8ff,#fff7df);color:#173a5e}
+button,input{font:inherit}.wrap{max-width:1180px;margin:auto;padding:18px}.glass{background:#ffffffdd;border:1px solid #fff;border-radius:28px;box-shadow:0 12px 35px #315b7420}
+header{display:flex;gap:12px;align-items:center;padding:15px 20px}.brand{font-size:23px;font-weight:900;margin-left:auto}.pill{background:#edf8ff;padding:9px 14px;border-radius:18px;font-weight:800}
+.hero{text-align:center;padding:18px;margin-top:15px}.hero h1{margin:4px}.bar{max-width:650px;height:13px;background:#e1edf2;border-radius:20px;margin:12px auto;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#ffcf55,#ff8fa7);width:12.5%}
+.primary,.secondary{border:0;border-radius:16px;padding:12px 20px;font-weight:900;cursor:pointer}.primary{background:#176ca6;color:white}.secondary{background:#edf3f6;color:#27445d}
+.start{position:fixed;inset:0;background:linear-gradient(145deg,#9de5ff,#fff1bd);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}.startbox{width:min(520px,100%);background:#fff;padding:35px;border-radius:35px;text-align:center;box-shadow:0 25px 60px #24556d35}.startbox input{width:100%;padding:14px;border:2px solid #d8e6ed;border-radius:14px;margin:12px 0}
+.world{margin-top:18px;padding:25px;border-radius:35px;background:linear-gradient(#aee8ff,#dff3bc);min-height:520px}.road{display:none}#stages{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}.stage{background:#fff8e5;border:4px solid #d7a652;border-radius:28px;padding:20px;text-align:center;box-shadow:0 8px 0 #b77d36,0 15px 25px #0002}.stage.open{cursor:pointer}.stage.lock{opacity:.58}.stage.done{background:#efffe9;border-color:#55b772}.ico{font-size:40px}.worldHint{font-weight:900;color:#735d43;margin:8px}
+.modal{display:none;position:fixed;inset:0;background:#102b4299;z-index:200;padding:18px;align-items:center;justify-content:center}.modal.show{display:flex}.modalbox{width:min(1000px,96vw);max-height:94vh;overflow:auto;background:#fff;border-radius:30px;padding:22px;box-shadow:0 25px 70px #0005}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;position:sticky;top:-22px;background:#fff;z-index:50;padding:10px 0}
+.qbox,.result{background:#f7fbfd;border-radius:24px;padding:22px;margin:12px 0;text-align:center}.question{font-size:23px;font-weight:900;margin:18px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:12px}.opt{background:#fff;border:2px solid #d7e5ec;border-radius:16px;padding:13px;font-weight:800}.tag{padding:7px 12px;border-radius:14px;font-weight:900}.green{background:#dff7e7}.orange{background:#fff0cf}
+
+/* الخريطة الجديدة: Grid حقيقي، لا absolute للبطاقات */
+.journeyHead{text-align:center;padding:10px 10px 18px}.journeyHead span{display:block;font-size:25px;font-weight:900;margin:7px}.journeyHead small{color:#587084}
+.journeyMap{position:relative;overflow:hidden;border-radius:32px;padding:55px 38px 45px;min-height:820px;background:linear-gradient(145deg,#7ed9f2,#dff5c9 58%,#ffe9ad);border:6px solid #fff;box-shadow:inset 0 0 40px #27708b25}
+.journeyMap.world1{background:linear-gradient(145deg,#c9c3ff,#eef0ff,#d7e6ff)}.journeyMap.world2{background:linear-gradient(145deg,#182752,#344c88,#6d77b8)}.journeyMap.world3{background:linear-gradient(#9fe2ff 0 24%,#f0cf86 24% 100%)}.journeyMap.world4{background:linear-gradient(#b8e6ff 0 22%,#c8d4d9 22%,#dcebbd)}.journeyMap.world5{background:linear-gradient(#ffd9e9,#e8f3c7)}.journeyMap.world6{background:linear-gradient(#b7e8ff,#d7efbd)}.journeyMap.world7{background:linear-gradient(#ffd979,#fff1c6)}
+.decor{position:absolute;inset:15px 20px auto;text-align:center;font-size:30px;letter-spacing:24px;opacity:.72;z-index:1}
+.trail{position:absolute;inset:55px 7% 45px;width:86%;height:calc(100% - 100px);z-index:1;pointer-events:none}.trail path{fill:none;stroke:#fff;stroke-width:15;stroke-linecap:round;stroke-dasharray:4 28;opacity:.95}
+.journeyGrid{position:relative;z-index:5;display:grid;grid-template-columns:1fr;gap:34px;padding:30px 0}
+.stageRow{display:grid;grid-template-columns:1fr 1fr;min-height:125px;align-items:center}.stageRow.right .lessonCard{grid-column:2;justify-self:end}.stageRow.left .lessonCard{grid-column:1;justify-self:start}
+.lessonCard{position:relative;width:min(330px,92%);min-height:125px;border:4px solid #fff;background:linear-gradient(#fffdf8,#fff1dd);border-radius:28px;padding:20px 16px 14px;box-shadow:0 8px 0 #caa98d,0 15px 25px #34546a2a;text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;z-index:8}
+.lessonCard .num{position:absolute;top:-20px;right:18px;width:45px;height:45px;border-radius:50%;display:grid;place-items:center;background:#f06f91;color:#fff;font-size:20px;font-weight:900;border:4px solid #fff;box-shadow:0 5px 10px #0002}.lessonCard.c2 .num{background:#eea33a}.lessonCard.c3 .num{background:#48b96d}.lessonCard.c4 .num{background:#4e91dc}.lessonCard.c5 .num{background:#b45ed2}.lessonCard.c6 .num{background:#29ad9b}.lessonCard.c7 .num{background:#7858c7}
+.lessonCard .state{font-size:25px}.lessonCard strong{font-size:17px;line-height:1.35}.lessonCard small{font-size:12px;color:#607080}.lessonCard.open{cursor:pointer;outline:5px solid #ffd75c}.lessonCard.locked{opacity:.68;filter:saturate(.55);cursor:not-allowed}.lessonCard.done{background:linear-gradient(#f5fff1,#dff5d8);outline:4px solid #49b66d}
+.treasureEnd{text-align:center;font-size:20px;font-weight:900;background:#fff7d8;border-radius:18px;padding:12px;max-width:260px;margin:10px auto 0}
+@media(max-width:700px){#stages{grid-template-columns:1fr}.modalbox{padding:14px}.journeyMap{padding:55px 12px 35px}.trail{display:none}.journeyGrid{gap:55px}.stageRow{grid-template-columns:1fr;min-height:120px}.stageRow.right .lessonCard,.stageRow.left .lessonCard{grid-column:1;justify-self:center}.lessonCard{width:88%}.stageRow:not(:last-child):after{content:"•••▼";white-space:pre;position:absolute;left:50%;transform:translate(-50%,90px);color:#fff;font-size:18px;letter-spacing:5px}.opts{grid-template-columns:1fr}}
+</style>
+<style id="ADVENTURE-THEME-NO-IMAGES">
+/* ==========================================================
+   ثيم مغامرة مستوحى من المرجع — CSS فقط، بلا أي صورة خارجية
+   ========================================================== */
+.journeyHead{
+  background:linear-gradient(180deg,#fffdf7,#fff3cf)!important;
+  border:4px solid #fff!important;
+  border-radius:28px!important;
+  box-shadow:0 10px 0 #d8b164,0 17px 30px #234d6730!important;
+  padding:15px 20px!important;
+}
+.journeyHead span{color:#173f68!important;font-size:27px!important}
+
+.journeyMap{
+  position:relative!important;
+  overflow:hidden!important;
+  border:8px solid #fff!important;
+  border-radius:40px!important;
+  padding:65px 45px 55px!important;
+  min-height:980px!important;
+  background:
+    radial-gradient(ellipse at 12% 13%,#f2d789 0 8%,transparent 8.4%),
+    radial-gradient(ellipse at 83% 31%,#eed17c 0 9%,transparent 9.4%),
+    radial-gradient(ellipse at 17% 55%,#e9c875 0 10%,transparent 10.4%),
+    radial-gradient(ellipse at 80% 77%,#f1d685 0 9%,transparent 9.4%),
+    linear-gradient(155deg,#64d1ee,#2eb6d5)!important;
+  box-shadow:inset 0 0 60px #12698b25,0 18px 45px #244b6430!important;
+  isolation:isolate!important;
+}
+
+/* زخارف جزيرية مرسومة بالكامل بالـ CSS */
+.journeyMap:before{
+  content:""!important;
+  position:absolute!important;inset:0!important;z-index:0!important;
+  background:
+    radial-gradient(circle at 7% 8%,#45bd68 0 18px,transparent 19px),
+    radial-gradient(circle at 10% 10%,#2c9f56 0 25px,transparent 26px),
+    radial-gradient(circle at 92% 17%,#49c36d 0 20px,transparent 21px),
+    radial-gradient(circle at 89% 20%,#299e53 0 27px,transparent 28px),
+    radial-gradient(circle at 9% 83%,#40b967 0 22px,transparent 23px),
+    radial-gradient(circle at 93% 69%,#36aa5b 0 23px,transparent 24px);
+  pointer-events:none!important;
+}
+.journeyMap:after{
+  content:"🏝️　🌴　⭐　💎　🌴　🏰　⛰️　🏆"!important;
+  position:absolute!important;left:2%!important;right:2%!important;bottom:12px!important;
+  text-align:center!important;font-size:31px!important;letter-spacing:15px!important;
+  opacity:.9!important;z-index:1!important;pointer-events:none!important;
+}
+
+/* الطريق الأبيض المتعرج مثل المرجع */
+.trail{
+  position:absolute!important;inset:60px 4% 45px!important;
+  width:92%!important;height:calc(100% - 105px)!important;
+  z-index:2!important;pointer-events:none!important;
+}
+.trail path{
+  fill:none!important;
+  stroke:#fff!important;
+  stroke-width:18!important;
+  stroke-linecap:round!important;
+  stroke-dasharray:3 30!important;
+  filter:drop-shadow(0 3px 2px #14738c55)!important;
+}
+
+/* المراحل تبقى Grid: مستحيل تتراكب */
+.journeyGrid{
+  position:relative!important;z-index:6!important;
+  display:grid!important;grid-template-columns:1fr!important;
+  gap:45px!important;padding:25px 0 45px!important;
+}
+.stageRow{
+  display:grid!important;
+  grid-template-columns:1fr 1fr!important;
+  min-height:145px!important;
+  align-items:center!important;
+}
+.stageRow.right .lessonCard{grid-column:2!important;justify-self:end!important}
+.stageRow.left .lessonCard{grid-column:1!important;justify-self:start!important}
+
+/* بطاقات المرحلة مثل المرجع: أبيض، رقم دائري كبير، حواف ملونة */
+.lessonCard{
+  position:relative!important;
+  width:min(340px,92%)!important;
+  min-height:145px!important;
+  border-radius:30px!important;
+  padding:25px 18px 16px!important;
+  background:linear-gradient(180deg,#fff,#fffaf2)!important;
+  border:5px solid var(--accent,#ef7196)!important;
+  box-shadow:
+    0 8px 0 color-mix(in srgb,var(--accent,#ef7196) 65%,#754c31),
+    0 17px 30px #17485f35!important;
+  display:flex!important;flex-direction:column!important;
+  align-items:center!important;justify-content:center!important;
+  gap:5px!important;
+  text-align:center!important;
+}
+.lessonCard.c1{--accent:#ef628e!important}
+.lessonCard.c2{--accent:#f2a134!important}
+.lessonCard.c3{--accent:#48b968!important}
+.lessonCard.c4{--accent:#ef687f!important}
+.lessonCard.c5{--accent:#3f79d3!important}
+.lessonCard.c6{--accent:#e86b92!important}
+.lessonCard.c7{--accent:#8854d6!important}
+
+.lessonCard .num{
+  position:absolute!important;
+  top:-31px!important;right:18px!important;
+  width:64px!important;height:64px!important;
+  border-radius:50%!important;
+  display:grid!important;place-items:center!important;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--accent) 70%,#fff),var(--accent))!important;
+  color:#fff!important;font-size:31px!important;font-weight:900!important;
+  border:6px solid #fff!important;
+  box-shadow:0 7px 0 color-mix(in srgb,var(--accent) 65%,#68472f),0 10px 20px #0002!important;
+}
+.lessonCard .state{font-size:27px!important;margin-top:2px!important}
+.lessonCard strong{
+  color:#153d65!important;
+  font-size:19px!important;line-height:1.35!important;
+}
+.lessonCard small{
+  color:#4c6174!important;font-size:13px!important;font-weight:800!important;
+}
+
+/* الحالات */
+.lessonCard.locked{
+  opacity:.82!important;filter:saturate(.72)!important;
+}
+.lessonCard.open{
+  opacity:1!important;
+  animation:adventureGlow 1.25s ease-in-out infinite alternate!important;
+}
+.lessonCard.done{
+  opacity:1!important;filter:none!important;
+  background:linear-gradient(#f8fff4,#e1f7d8)!important;
+  --accent:#42b66a!important;
+}
+@keyframes adventureGlow{
+  to{transform:translateY(-5px);filter:drop-shadow(0 0 10px #fff9)}
+}
+
+/* صندوق الإنجاز */
+.treasureEnd{
+  position:relative!important;z-index:7!important;
+  max-width:300px!important;margin:12px auto 0!important;
+  background:linear-gradient(180deg,#fff2a7,#f2bd43)!important;
+  border:5px solid #fff!important;border-radius:25px!important;
+  color:#67420d!important;font-size:19px!important;font-weight:900!important;
+  box-shadow:0 9px 0 #a66b1d,0 15px 25px #0002!important;
+}
+
+/* لمسات مختلفة لكل عالم بدون صور */
+.journeyMap.world1{background:linear-gradient(155deg,#a8e6ff 0 25%,#d9c9ff 25% 55%,#b8e8c1 55%)!important}
+.journeyMap.world2{background:radial-gradient(circle at 20% 20%,#fff 0 2px,transparent 3px),linear-gradient(145deg,#17204e,#41327c,#1b5790)!important}
+.journeyMap.world3{background:linear-gradient(#8fddf7 0 24%,#f1d18a 24% 100%)!important}
+.journeyMap.world4{background:linear-gradient(#a8e3ff 0 25%,#9aabb3 25% 63%,#cce8ad 63%)!important}
+.journeyMap.world5{background:linear-gradient(#bce8ff 0 25%,#f2c7dc 25% 58%,#d8efbd 58%)!important}
+.journeyMap.world6{background:linear-gradient(#9ee1ff 0 26%,#a9c6d6 26% 55%,#d4ecb8 55%)!important}
+.journeyMap.world7{background:linear-gradient(#7fd9f4 0 22%,#ffd777 22% 48%,#fff0bd 48%)!important}
+
+/* الجوال: مراحل عمودية واضحة، بدون أي تراكب */
+@media(max-width:700px){
+  .journeyMap{padding:75px 12px 50px!important;min-height:0!important}
+  .trail{display:none!important}
+  .journeyGrid{gap:66px!important}
+  .stageRow{grid-template-columns:1fr!important;min-height:145px!important}
+  .stageRow.right .lessonCard,.stageRow.left .lessonCard{
+    grid-column:1!important;justify-self:center!important;width:88%!important
+  }
+  .stageRow:not(:last-child):after{
+    content:"•\A•\A•\A▼"!important;white-space:pre!important;
+    position:absolute!important;left:50%!important;
+    transform:translate(-50%,115px)!important;
+    color:#fff!important;font-size:18px!important;line-height:13px!important;
+    text-shadow:0 2px 2px #176c8355!important
+  }
+}
+</style>
+
+<style>
+.adventure-start{min-height:100vh!important;max-width:none!important;width:100%!important;margin:0!important;padding:18px 14px 68px!important;position:relative!important;overflow:hidden!important;text-align:center!important;border-radius:0!important;box-shadow:none!important;background:linear-gradient(180deg,#cbeeff 0%,#eefaff 48%,#d8efc9 73%,#f4dca7 100%)!important}
+.adventure-start:before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 8% 18%,#fff9 0 7%,transparent 7.5%),radial-gradient(circle at 88% 20%,#fff8 0 9%,transparent 9.5%),radial-gradient(ellipse at 12% 100%,#31965d 0 22%,transparent 23%),radial-gradient(ellipse at 88% 100%,#258754 0 25%,transparent 26%)}
+.school-logo-wrap{position:relative;z-index:3;width:min(290px,70vw);margin:0 auto 8px;padding:7px 12px;background:#fffffff0;border-radius:20px;box-shadow:0 8px 20px #245b7830}.school-logo-wrap img{display:block;width:100%;max-height:95px;object-fit:contain;border-radius:13px}
+.title-board{position:relative;z-index:3;width:min(570px,91vw);margin:8px auto 20px}.title-board h1{display:inline-block;margin:0;padding:12px 45px 16px;border:6px solid #71431e;border-radius:28px;background:linear-gradient(#12699f,#064775);color:#ffd451;font-size:clamp(36px,6vw,62px);font-weight:1000;line-height:.95;text-shadow:0 4px #063657;box-shadow:0 9px 0 #5c3518,0 15px 25px #194f6e35}.title-board h1 strong{color:white}.wood-line{width:72%;margin:-4px auto 0;padding:9px 12px;background:linear-gradient(#f4bd66,#d78b36);border:3px solid #79481f;border-radius:11px;color:#123d60;font-size:18px;font-weight:900;box-shadow:0 5px 0 #70401d}.compass{position:absolute;left:3%;top:44%;font-size:52px;transform:translate(-25%,-50%);filter:drop-shadow(0 4px 3px #0003)}
+.top-note{position:absolute;z-index:2;color:#153f63;font-size:16px;line-height:1.65}.left-note{left:3%;top:25px;padding:12px 15px;background:#fff0c9;border:2px dashed #a77a45;border-radius:12px;transform:rotate(-3deg)}.right-note{right:4%;top:42px;font-size:19px;transform:rotate(3deg)}
+.signs{position:absolute;z-index:2;top:48%;display:grid;gap:8px}.signs-left{left:2%}.signs-right{right:2%}.signs span{min-width:140px;padding:9px 14px;background:#efae52;border:3px solid #865024;border-radius:9px;box-shadow:0 5px 0 #6f411e;color:#173f5c;font-weight:900}.signs-left span:nth-child(2){background:#77b9ef}.signs-left span:nth-child(3){background:#ffd35e}
+.adventure-card{position:relative!important;z-index:4!important;width:min(560px,92vw)!important;margin:22px auto 15px!important;padding:23px 27px 27px!important;background:#fffffff2!important;border:4px solid #9ed9f0!important;border-radius:24px!important;box-shadow:0 11px 0 #347b9a24,0 18px 32px #1b587b28!important}.adventure-card label{display:block;text-align:right;margin:4px 3px 7px;color:#123f68;font-size:18px;font-weight:900}.adventure-card input,.adventure-card select{display:block;width:100%!important;margin:0 0 15px!important;padding:14px 15px!important;border:2px solid #75bce5!important;border-radius:13px!important;background:white!important;color:#173f61!important;font-size:17px!important;box-sizing:border-box}.adventure-card button{width:82%!important;margin:5px auto 0!important;padding:14px 18px!important;border:4px solid #88d4ff!important;border-radius:19px!important;background:linear-gradient(#197abd,#07558f)!important;color:white!important;font-size:21px!important;font-weight:1000!important;box-shadow:0 7px 0 #06456f!important}
+.mini-notes{position:relative;z-index:3;display:flex;justify-content:center;gap:18px;flex-wrap:wrap;margin:8px auto}.mini-notes span{padding:8px 12px;background:#fff1d0;border:2px dashed #9e7849;border-radius:12px;color:#17466a;font-weight:800}.credit{position:relative;z-index:4;display:inline-block;margin:7px auto;padding:9px 23px;background:#f7e6bd;border-radius:999px;color:#123f67;font-size:17px;box-shadow:0 5px 14px #58462220}.adventure-footer{position:absolute;z-index:4;left:0;right:0;bottom:0;padding:11px;background:#08747c;color:white;font-weight:900}
+@media(max-width:900px){.top-note,.signs{display:none}.compass{font-size:40px;left:8%}}@media(max-width:560px){.adventure-start{padding:12px 8px 65px!important}.school-logo-wrap{width:min(260px,78vw)}.title-board h1{font-size:37px;padding:10px 25px;border-width:5px}.wood-line{font-size:14px;width:82%}.adventure-card{padding:18px 15px 22px!important}.mini-notes{font-size:12px}}
+</style>
+
+
+<style>
+/* ===== ترتيب نهائي لواجهة البداية ===== */
+.adventure-start{
+  min-height:100vh!important;
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:center!important;
+  justify-content:flex-start!important;
+  gap:12px!important;
+  padding:18px 16px 76px!important;
+  background:linear-gradient(180deg,#d9f3ff 0%,#eefaff 55%,#e4f3d2 100%)!important;
+  position:relative!important;
+  overflow:auto!important;
+}
+.school-logo-wrap{
+  order:1!important;
+  position:relative!important;
+  z-index:5!important;
+  width:min(270px,70vw)!important;
+  margin:0 auto 2px!important;
+  padding:7px 12px!important;
+  background:#fff!important;
+  border-radius:18px!important;
+  box-shadow:0 7px 18px rgba(25,78,110,.14)!important;
+}
+.school-logo-wrap img{width:100%!important;max-height:88px!important;object-fit:contain!important}
+
+.title-board{
+  order:2!important;
+  position:relative!important;
+  width:min(520px,92vw)!important;
+  margin:2px auto 8px!important;
+}
+.title-board h1{
+  margin:0!important;
+  padding:11px 34px 14px!important;
+  font-size:clamp(34px,5vw,52px)!important;
+}
+.wood-line{font-size:16px!important}
+
+.adventure-card{
+  order:3!important;
+  position:relative!important;
+  width:min(500px,92vw)!important;
+  margin:4px auto!important;
+  padding:20px 24px 23px!important;
+}
+.adventure-card label{font-size:17px!important}
+.adventure-card input,.adventure-card select{
+  margin-bottom:13px!important;
+  padding:12px 14px!important;
+}
+.adventure-card button{
+  width:78%!important;
+  padding:13px 16px!important;
+  font-size:20px!important;
+}
+
+.mini-notes{
+  order:4!important;
+  position:relative!important;
+  margin:5px auto!important;
+  display:flex!important;
+  justify-content:center!important;
+  gap:10px!important;
+  flex-wrap:wrap!important;
+}
+.mini-notes span{font-size:13px!important;padding:7px 11px!important}
+
+.credit{
+  order:5!important;
+  position:relative!important;
+  margin:6px auto 2px!important;
+  padding:9px 24px!important;
+  font-size:17px!important;
+  background:#fff2d2!important;
+  border:2px solid #e5bd72!important;
+}
+
+/* إزالة العناصر الجانبية العشوائية من الواجهة */
+.top-note,.signs{display:none!important}
+
+/* البوصلة تبقى جزءًا صغيرًا من العنوان فقط */
+.compass{
+  left:4%!important;
+  top:45%!important;
+  font-size:42px!important;
+}
+
+/* الإعداد في الأسفل، والفوتر تحته */
+.adventure-footer{
+  order:6!important;
+  position:absolute!important;
+  left:0!important;
+  right:0!important;
+  bottom:0!important;
+  padding:10px!important;
+}
+
+/* خلفية هادئة بدون عناصر مشتتة */
+.adventure-start:before{
+  content:""!important;
+  position:absolute!important;
+  inset:0!important;
+  pointer-events:none!important;
+  background:
+    radial-gradient(circle at 10% 12%,rgba(255,255,255,.7) 0 7%,transparent 7.5%),
+    radial-gradient(circle at 90% 15%,rgba(255,255,255,.65) 0 8%,transparent 8.5%),
+    radial-gradient(ellipse at 12% 100%,rgba(68,159,93,.65) 0 22%,transparent 23%),
+    radial-gradient(ellipse at 88% 100%,rgba(48,139,82,.62) 0 24%,transparent 25%)!important;
+}
+@media(max-width:560px){
+  .adventure-start{padding:12px 10px 72px!important;gap:8px!important}
+  .school-logo-wrap{width:min(235px,72vw)!important}
+  .school-logo-wrap img{max-height:72px!important}
+  .title-board h1{font-size:34px!important;padding:9px 22px 12px!important}
+  .wood-line{font-size:13px!important;width:82%!important}
+  .adventure-card{padding:17px 15px 20px!important}
+  .mini-notes{display:none!important}
+  .credit{font-size:15px!important}
+}
+</style>
+
+
+<style>
+.treasureEnd{display:block!important;width:min(340px,90%)!important;padding:15px 18px!important;cursor:pointer!important}
+.treasureEnd small{display:block;margin-top:6px;font-size:12px;font-weight:700}
+.treasureEnd.ready{animation:treasurePulse 1.4s infinite}
+.treasureEnd.locked{filter:grayscale(.45);opacity:.72;cursor:not-allowed!important}
+@keyframes treasurePulse{50%{transform:translateY(-4px) scale(1.025);box-shadow:0 10px 0 #a66b1d,0 18px 30px #f3bd4760}}
+.bigTreasure{font-size:80px;animation:treasurePop .65s ease}
+@keyframes treasurePop{0%{transform:scale(.3) rotate(-12deg)}70%{transform:scale(1.18) rotate(5deg)}100%{transform:scale(1)}}
+.achievementMedal{display:inline-block;margin:10px;padding:10px 20px;border-radius:999px;background:#fff0a6;border:3px solid #e4b43f;font-weight:1000;color:#76500b}
+.soundToggle{border:0;border-radius:999px;padding:10px 14px;background:#fff;color:#17466a;font-weight:900;cursor:pointer;box-shadow:0 4px 12px #0001}
+</style>
+</head><body>
+<div id="start" class="start adventure-start">
+  <div class="school-logo-wrap"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAYGBgYHBgcICAcKCwoLCg8ODAwODxYQERAREBYiFRkVFRkVIh4kHhweJB42KiYmKjY+NDI0PkxERExfWl98fKcBBgYGBgcGBwgIBwoLCgsKDw4MDA4PFhAREBEQFiIVGRUVGRUiHiQeHB4kHjYqJiYqNj40MjQ+TERETF9aX3x8p//CABEIAREBxQMBIgACEQEDEQH/xAAxAAEAAgMBAAAAAAAAAAAAAAAAAwUBAgQGAQEBAQEBAQAAAAAAAAAAAAAAAQIDBAX/2gAMAwEAAhADEAAAAvTsEywMsDLAywMsDLAywMsDLAywMsDLAywMsDLAywMsDLAywMsDLAywMsDLAywM4DfOMqBGEAAAAAAAAAAAAAAAAAAAAAAAAAAkCgRhABzy53qpvL0s2M+vkAAAAAAAAAAAANDVVdHk7WTTf18Wu1PjVh0Vs/LXWPRzAAAAkCgRhAEUpaOXvk8HaQe/gAAAAAAAAAAAA12FJmz34dN8sd+eafs65aSy6c89B1wAAABIFAjCAAc8kcnh6yD3cgAAAAAAABWZ1Zqufne1T9UvcO/MCCSOSt+Ps5TpyQAIJZ1P1cd9w78wAJAoEYQADnkjk8PaQe7iAAAAAAAAprmLnqszLY8900m/flIPVypeGar7z1++m/GycvVynUIAcXbyy18vTP5eso9fEACQKBGEAA55I5PD1kHu5AEPkNvaq+wyPMtvTFThbPFey035OugjqtfC+51Mnns2eCi7O2bC58fGe9Vlnw15yss6zvn1++m/DUVZv5vrPeZ49uV6nKN9tOgCAAAJAoEYQADnkjk8PbEdNV/T4e2HKweI9v4jvPV2dZZ8r5Mds+sprmm5a837rwvutzegv6DFpPc+G9zuaeH9l4su/R1tliw+H934Xc9HdU1zi+dq7Sq659X1Zzw1Teb9J5vvn3MnHvw10uYdOsHJmydFfL4u1mPdwAAkCgRhAAOeSOTw9aGqtar63D248+oPEe38R3nqbXyNxlUa8eOs95STUvK8PuvCXm56Lz/b5/F5fc+Eudy/8R6rzMektvF32bZ+F9J5rU9Lc+a783hqtoOs95t53u4WDzvVr2nst4M+fUyGM6o9toqujtY0G8gASBQIwgAHPJHJ4e1FU33mvref3yssOOo/EX9B2zvr7GbN8haegzl4Pf22aoan22I8JL7SLStovb8uXjM+4208K91g8M9yPDPdYPJWt2w8RD7zk28r6WwzgGKBydcWtTiAAAJAoEYQADnkjk8PbPkvYY+hx8Fn10PWeWurrqyxk5UAABzyckvfzdHAd+YZkCgAAHN0V8ti03sAAcvVgZrO+WQWAASBQIwgAHPibHh7Rtxo3GjcabZwb78smpMxD3xJpHJ5elZO5sbk16+Pcn6+GxTVss1bDVsNWw4MdHDjXR183ZvOmdhq2GvL2Q1xT8vTjVkPoecACQKBGEAA1xpp4+syFlMhEyETbc+F6IJ9emY8a9Hn3s1g9GJ0LnZkJZkImQiZCSZCJkImQlmQiZCJkJJkImzBJuSj18wAJAoEYQAAABjIARSsaikyTnnyliSoDrkAFBAAAAAAAAAAAAJAoEYQAA03Djg07paPvO3mg4ktZvP3VvQqeqOxHzxPLV613qmerHavmjr04RYwuSLNBCdqntSTng5at4+KMtueGvL5yyxKqZqsFXIWCq6DtGQAEgUCMIABSa2ku5WYuGbWxW4p5bMVfR2ClktlU0d6KjS6FJJbjh6ZUc2nYNNJkVnLe40p5LUUG94KbNwOKGzRUrZVNvbCnxcoprHoAQABIxlQNG5NG40bjRuNG4jSCPO40xII87jTEgjzuNG4jSCPO4jSCNII0g0bjRuNG4jzuNG40bjRuNG40bjTEg12FAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA//8QAAv/aAAwDAQACAAMAAAAhNNNNNNNNNNNNNNNNNNNNNNNNNNNoA999999999999999999999999999AA99+3/9999999999995QdtAV9999AA998iV9999999999999nbR9/8AfffQAPffZXffffffffeP+sf6df8A37bX30AD331jPX33333339ys3bxX32qb330AD333X33rXD7T62htUX/wjflH3330AD333hvWrQOBbSCKTLAdTusGdrf30AD332X9X7i5MXe9d4cGLvssW13330AD331QNAEq2q9AXrTywc192233330AD331AJJHX3/1O7f3332JX32tj330AD331DzzyyqkbexYwwwzt+wwz9X30AD333bHHMKYWreLDDPPPDDLPPP330AD3300100LNR40kQ00E0000001330AD333fDbNQg/6igYbbI45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" alt="شعار مدرسة بلقيس"></div>
+  <div class="top-note left-note">الرياضيات ليست صعبة..<br><b>بل هي مغامرة تستحق الاكتشاف! ♡</b></div>
+  <div class="top-note right-note"><b>هنا تبدأ الرحلة..</b> ✈️</div>
+
+  <div class="title-board">
+    <span class="compass">🧭</span>
+    <h1>رحلة تحدي<br><strong>الرياضيات</strong></h1>
+    <div class="wood-line">فكّر • حل • تقدّم • تميّز</div>
+  </div>
+
+  <div class="signs signs-left"><span>💡 تحديات</span><span>📈 مستويات</span><span>🏆 إنجازات</span></div>
+  <div class="signs signs-right"><span>أهداف أكبر</span><span>معرفة أعمق</span><span>مستقبل أجمل</span></div>
+
+  <div class="startbox adventure-card">
+    <label>👩‍🎓 اسم الطالبة واسم القبيلة:</label>
+    <input id="nm" placeholder="مثال: حور أحمد المعمرية">
+    <label>🎓 اختاري الصف:</label>
+    <select id="cls">
+      <option value="">اختاري الصف</option>
+      <option value="7/6">7/6</option>
+      <option value="7/7">7/7</option>
+      <option value="7/8">7/8</option>
+    </select>
+    <button class="primary" onclick="begin()">▶ ابدئي المغامرة</button>
+  </div>
+
+  <div class="mini-notes"><span>📚 النجاح يبدأ بخطوة.. وأنتِ قادرة ♡</span><span>🗺️ كل تحدٍ يقربك من هدفك ♡</span></div>
+  <div class="credit">🌱 إعداد: <b>أ. شيخة النوفلي</b> 🌱</div>
+  <div class="adventure-footer">معًا.. نصنع جيلًا مبدعًا في الرياضيات ♡</div>
+</div>
+<div class="wrap"><header class="glass"><div class="brand">🧭 رحلة تحدي الرياضيات</div><div class="pill">👩‍🎓 <span id="student">—</span></div><div class="pill">⭐ <span id="points">0</span> نقطة</div><button class="soundToggle" onclick="soundOn=!soundOn;this.textContent=soundOn?'🔊 الصوت':'🔇 الصوت'">🔊 الصوت</button></header>
+<section class="glass hero"><div style="font-size:42px">🌷 🗺️ ⭐</div><h1>عوالم تحدي الرياضيات</h1><p id="hello"></p><div class="bar"><i id="bar"></i></div><b id="prog"></b><p><button class="secondary" onclick="summary()">📊 سجل الإنجاز</button> <button class="secondary" onclick="rename()">✏️ تغيير الاسم</button></p></section>
+<div id="world" class="world"><div class="road"></div><div id="stages"></div></div></div>
+<div id="modal" class="modal"><div class="modalbox"><div class="top"><div><b>👩‍🎓 <span id="mname"></span></b><h2 id="mtitle"></h2></div><button class="secondary" onclick="closeM()">✕</button></div><div id="mbody"></div></div></div>
+<script>
+const S=[
+["بوابة الأعداد","🔢",[
+["جمع وطرح الأعداد الصحيحة",[["−7 + 12 =",["−19","5","−5","19"],1],["8 − 13 =",["5","−5","21","−21"],1],["−6 − 4 =",["−2","10","−10","2"],2]]],
+["ضرب وقسمة الأعداد الصحيحة",[["(−6) × 4 =",["24","−24","−10","10"],1],["(−36) ÷ (−6) =",["−6","6","30","−30"],1],["7 × (−3) =",["21","−21","−10","10"],1]]],
+["العوامل وقابلية القسمة",[["عامل للعدد 24:",["5","7","8","11"],2],["يقبل القسمة على 3:",["55","56","57","58"],2],["يقبل القسمة على 2 و3:",["22","24","25","27"],1]]],
+["المضاعفات والمضاعف المشترك الأصغر",[["أي عدد من مضاعفات 6؟",["14","18","20","25"],1],["المضاعف المشترك الأصغر للعددين 4 و6 =",["8","10","12","24"],2],["أول ثلاثة مضاعفات موجبة للعدد 5 هي:",["5، 10، 15","1، 5، 10","5، 15، 25","10، 15، 20"],0]]],
+["الأعداد الأولية",[["عدد أولي:",["21","27","29","33"],2],["له عاملان فقط:",["18","19","20","21"],1],["أولي بين 30 و40:",["30","31","33","39"],1]]],
+["القوى والجذور وترتيب العمليات",[["2³ =",["6","8","9","12"],1],["√49 =",["6","7","8","9"],1],["8 + 2 × 3 =",["30","14","10","24"],1]]]]],
+["وادي الجبر","🧩",[
+["كتابة العبارات الجبرية",[["خمسة أكثر من س",["س−5","س+5","5س","س÷5"],1],["ثلاثة أمثال ن",["ن+3","ن−3","3ن","ن÷3"],2],["إذا س=4 فإن س+7",["9","10","11","12"],2]]],
+["تجميع الحدود المتشابهة",[["3س+5س",["8","8س","15س","2س"],1],["7ص−2ص",["5","5ص","9ص","−5ص"],1],["4س+3+2س",["6س+3","6س+5","2س+3","6س"],0]]],
+["فك الأقواس",[["3(س+2)",["3س+2","3س+6","س+6","6س"],1],["5(ص−2)",["5ص−2","5ص+10","5ص−10","ص−10"],2],["2(س+4)+س",["3س+4","3س+8","2س+12","س+8"],1]]],
+["حل المعادلات",[["س+7=12",["4","5","6","19"],1],["س−4=9",["5","13","−13","36"],1],["3س=18",["5","6","9","15"],1],["2س+4=14",["4","5","6","7"],1]]]]],
+["مدينة الأعداد العشرية","🔹",[
+["ترتيب الأعداد العشرية",[["الأكبر: 2.09،2.9،2.19",["2.09","2.9","2.19","2.099"],1],["تصاعديًا: 0.5،0.05،0.55",["0.5،0.05،0.55","0.05،0.5،0.55","0.55،0.5،0.05","0.05،0.55،0.5"],1],["0.7 =",["7/100","70/100","17/10","7/1000"],1]]],
+["التقريب",[["4.67 لأقرب صحيح",["4","5","4.6","4.7"],1],["3.146 لأقرب عُشر",["3.0","3.1","3.2","3.14"],1],["8.75 لأقرب صحيح",["8","8.5","9","10"],2]]],
+["جمع وطرح الأعداد العشرية",[["2.5+1.35",["3.75","3.85","3.95","2.85"],1],["7.2−3.85",["3.25","3.35","4.35","4.15"],1],["0.75+0.6",["1.25","1.35","1.45","0.85"],1]]],
+["ضرب وقسمة الأعداد العشرية",[["0.4×5",["1","2","2.5","20"],1],["2.4×3",["6.2","7.2","7.4","8.2"],1],["6.4÷0.8",["6","7","8","9"],2]]]]],
+["محطة القياس","📏",[
+["وحدات الطول",[["طول القلم:",["كم","م","سم","طن"],2],["بين مدينتين:",["مم","سم","م","كم"],3],["100 سم",["1 مم","1 م","10 م","100 م"],1]]],
+["وحدات الكتلة",[["كتلة حبة تمر:",["غرام","كغ","طن","لتر"],0],["1000 غرام",["1 غ","10 كغ","1 كغ","100 كغ"],2],["كتلة حقيبة:",["سم","لتر","كغ","مل"],2]]],
+["وحدات السعة",[["زجاجة صغيرة:",["مل","كم","كغ","سم"],0],["1000 مل",["1 مل","10 ل","1 ل","100 ل"],2],["خزان كبير:",["مل","لتر","غرام","سم"],1]]]]],
+["جبل الزوايا","📐",[
+["أنواع الزوايا",[["أقل من 90°",["حادة","قائمة","منفرجة","مستقيمة"],0],["90°",["حادة","قائمة","منفرجة","مستقيمة"],1],[">90° وأقل من 180°",["حادة","قائمة","منفرجة","كاملة"],2]]],
+["تقدير الزوايا",[["حادة:",["45°","90°","120°","180°"],0],["منفرجة:",["45°","80°","110°","180°"],2],["مستقيمة:",["90°","120°","180°","360°"],2]]],
+["قياس الزوايا",[["على خط مستقيم: 70° والأخرى",["20°","70°","110°","290°"],2],["90°−35°",["45°","55°","65°","75°"],1],["متممة 40°",["40°","50°","60°","140°"],1]]],
+["زوايا المثلث",[["مجموع زوايا المثلث",["90°","180°","270°","360°"],1],["50° و60°، الثالثة",["60°","70°","80°","90°"],1],["زاويتان على خط مستقيم",["90°","120°","180°","360°"],2]]]]],
+["مملكة الكسور","🍰",[
+["تبسيط الكسور",[["6/12",["1/2","1/3","2/3","3/4"],0],["8/20",["2/5","3/5","4/5","1/5"],0],["15/25",["1/5","2/5","3/5","4/5"],2]]],
+["مقارنة الكسور",[["الأكبر: 1/2،2/3،3/5",["1/2","2/3","3/5","1/3"],1],["يساوي 1",["4/5","5/5","3/5","1/5"],1],["7/3",["1 1/3","2 1/3","2 2/3","3 1/3"],1]]],
+["عمليات الكسور",[["1/4+1/4",["1/2","1/3","2/3","3/4"],0],["3/4−1/4",["1/3","1/2","1/4","3/4"],1],["2/3×3/4",["1/2","2/7","3/8","1"],0],["1/2÷1/4",["1","2","3","4"],1]]]]],
+["جزيرة المساحة والمحيط","⬛",[
+["مساحة ومحيط المستطيل",[["8×3 المساحة",["11","22","24","28"],2],["8×3 المحيط",["11","22","24","48"],1],["10×5 المساحة",["15","30","50","100"],2]]],
+["المثلث ومتوازي الأضلاع",[["مثلث قاعدة 8 وارتفاع 5",["20","40","13","30"],0],["متوازي أضلاع 7×4",["11","14","28","56"],2],["شبه منحرف 6،10 وارتفاع 4",["16","32","40","64"],1]]],
+["الدائرة",[["نصف قطر 3، المساحة",["18.84","28.26","9.42","37.68"],1],["نصف قطر 5، المحيط",["15.7","31.4","62.8","78.5"],1],["قانون المحيط",["πr","2πr","πr²","r²"],1]]]]],
+["قمة النسب المئوية","💯",[
+["النسب البسيطة",[["50%",["1/2","1/4","3/4","1/10"],0],["25%",["1/2","1/4","3/4","1/5"],1],["0.5",["5%","50%","0.5%","500%"],1]]],
+["النسبة من كمية",[["20% من 50",["5","10","15","20"],1],["25% من 80",["10","20","25","40"],1],["10% من 240",["12","20","24","30"],2]]],
+["تطبيقات النسبة المئوية",[["40 ريال وخصم 25%، الخصم",["5","8","10","15"],2],["20 طالبة، شاركت 60%",["8","10","12","14"],2],["18/20",["80%","85%","90%","95%"],2],["35% من 200",["35","50","70","80"],2]]]]]
+];
+let st={name:"",className:"",points:0,stage:1,lessons:{},attempts:{},best:{}};let cur={};
+const key=(s,l)=>s+"-"+l;const RESULTS_URL="https://script.google.com/macros/s/AKfycbzof2FvzbWpv5YJbTRYiIFb4Y3mj4fhxl5Vlfawgxbo_jMaBGWJzPASIYgSwXNDhYzk/exec";
+function loadCloudStudent(name,className){
+  return new Promise((resolve)=>{
+    const cb="cloudCB_"+Date.now()+"_"+Math.floor(Math.random()*10000);
+    const script=document.createElement("script");
+    let finished=false;
+    const done=(value)=>{
+      if(finished)return; finished=true;
+      try{delete window[cb]}catch(e){}
+      if(script.parentNode)script.parentNode.removeChild(script);
+      resolve(value);
+    };
+    window[cb]=(d)=>done(d&&d.found&&d.state?d.state:null);
+    script.onerror=()=>done(null);
+    script.src=RESULTS_URL+"?action=load&studentName="+encodeURIComponent(name)+"&className="+encodeURIComponent(className)+"&callback="+encodeURIComponent(cb)+"&_="+Date.now();
+    document.head.appendChild(script);
+    setTimeout(()=>done(null),8000);
+  });
+}
+function saveCloud(){
+  if(!st.name||!st.className)return;
+  const payload={type:"progress",studentName:st.name,className:st.className,state:st};
+  fetch(RESULTS_URL,{
+    method:"POST",mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload)
+  }).catch(()=>{});
+}
+
+function sendResult(s,l){
+  let k=key(s,l), status=st.lessons[k];
+  if(!status) return;
+  const payload={
+    studentName:st.name,
+    className:st.className||"",
+    unit:S[s][0],
+    stage:l+1,
+    lesson:S[s][2][l][0],
+    attempts:st.attempts[k]||0,
+    bestScore:(st.best[k]||0)+"%",
+    status:status==="mastered"?"متقنة":"تحتاج دعم",
+    points:st.points
+  };
+  fetch(RESULTS_URL,{
+    method:"POST",
+    mode:"no-cors",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},
+    body:JSON.stringify(payload)
+  }).catch(()=>{});
+}
+function save(){localStorage.setItem("MathRoadV3",JSON.stringify(st));saveCloud()}
+function load(){
+  let x=localStorage.getItem("MathRoadV3");
+  if(x){try{st=Object.assign(st,JSON.parse(x))}catch(e){}}
+  /* اظهري صفحة الدخول دائمًا بدون عرض بيانات الطالبة السابقة */
+  start.style.display="";
+  if(document.getElementById("nm")) document.getElementById("nm").value="";
+  if(document.getElementById("cls")) document.getElementById("cls").value="";
+}
+async function begin(){
+  let n=nm.value.trim(),c=cls.value;
+  if(!n)return alert("اكتبي اسمكِ واسم القبيلة أولًا 🌷");
+  if(!c)return alert("اختاري الصف والشعبة 🌷");
+  const btn=document.querySelector("#start .primary");
+  const oldText=btn?btn.textContent:"";
+  if(btn){btn.disabled=true;btn.textContent="⏳ جارٍ استرجاع تقدمكِ...";}
+  const cloud=await loadCloudStudent(n,c);
+  if(cloud){
+    st=Object.assign({name:n,className:c,points:0,stage:1,lessons:{},attempts:{},best:{}},cloud);
+    st.name=n;st.className=c;
+  }else{
+    // إذا لم يوجد سجل سحابي، استخدمي التقدم المحلي فقط إن كان لنفس الطالبة والصف
+    const local=localStorage.getItem("MathRoadV3");
+    let saved=null;
+    try{saved=local?JSON.parse(local):null}catch(e){}
+    if(saved && saved.name===n && saved.className===c) st=Object.assign(st,saved);
+    else st={name:n,className:c,points:0,stage:1,lessons:{},attempts:{},best:{}};
+    st.name=n;st.className=c;
+    saveCloud();
+  }
+  save();
+  if(btn){btn.disabled=false;btn.textContent=oldText||"▶ ابدئي المغامرة";}
+  start.style.display="none";render();
+}
+function rename(){let n=prompt("اكتبي الاسم:",st.name);if(n&&n.trim()){st.name=n.trim();save();render()}}
+function stageDone(s){return S[s][2].every((_,l)=>st.lessons[key(s,l)])}
+function lessonOpen(s,l){if(s>=st.stage)return false;if(l===0)return true;return !!st.lessons[key(s,l-1)]}
+function render(){student.textContent=mname.textContent=st.name;points.textContent=st.points;hello.innerHTML=`أهلًا <b>${st.name}</b> 🌷 ثمانية عوالم مختلفة فعليًا: جزيرة، مدينة، فضاء، صحراء، جبل، قصر، موقع بناء وسوق.`;let d=0;S.forEach((_,i)=>{if(stageDone(i))d++});bar.style.width=Math.max(12.5,d/8*100)+"%";prog.textContent=`أنجزتِ ${d} من 8 وحدات`;stages.innerHTML="";S.forEach((s,i)=>{let open=i<st.stage,done=stageDone(i),x=document.createElement("div");x.className="stage "+(open?"open":"lock")+" "+(done?"done":"");x.innerHTML=`<div class=ico>${done?"🏆":open?s[1]:"🔒"}</div><h2>${i+1}. ${s[0]}</h2><p>${s[2].length} محطات دراسية</p><div class=worldHint>${["🏝️ جزيرة وكنوز","🏙️ مدينة وأبواب سرية","🚀 فضاء وكواكب","🏜️ استكشاف وصحراء","🏔️ تسلق الجبل","🏰 مملكة وقصر","🏗️ بناء مدينة","🛍️ سوق وتحديات"][i]}</div><b>${done?"✅ مكتملة":open?"🛣️ ادخلي المغامرة":"🔒 ستفتح بعد الوحدة السابقة"}</b>`;if(open)x.onclick=()=>openStage(i);stages.appendChild(x)})}
+function openStage(s){
+ cur.s=s; mtitle = document.getElementById("mtitle");
+ mtitle.textContent=`${S[s][1]} ${S[s][0]}`;
+ const names=["🏝️ جزيرة بوابة الأعداد","🏙️ مدينة أسرار الجبر","🚀 رحلة الكواكب العشرية","🧭 صحراء القياس والاستكشاف","🏔️ جبل الزوايا","🏰 مملكة الكسور","🏗️ مدينة المساحة والبناء","🛍️ سوق النسب المئوية"];
+ const deco=["🌴 🐚 💎 🌊","🔑 🏛️ 🧩 ✨","🪐 ⭐ 🚀 🌙","🐪 🌴 🧭 ⛺","⛰️ 🦅 📐 🚩","👑 🌸 🔑 🏰","🏗️ 🧱 📐 🌳","🛍️ 🏷️ 💰 🎈"];
+ let lessons=S[s][2], n=lessons.length;
+ let pts=[];
+ for(let i=0;i<n;i++){let y=110+i*(760/Math.max(1,n-1));let x=i%2===0?780:220;pts.push([x,y])}
+ let d=pts.map((p,i)=>i===0?`M ${p[0]} ${p[1]}`:`C ${i%2?650:350} ${p[1]-80}, ${i%2?350:650} ${p[1]-20}, ${p[0]} ${p[1]}`).join(" ");
+ let h=`<div class="journeyHead"><b>👩‍🎓 ${st.name}</b><span>${names[s]}</span><small>ابدئي من المرحلة 1، وكل مرحلة تفتح التي بعدها</small></div>
+ <div class="journeyMap world${s}">
+   <div class="decor">${deco[s]}</div>
+   <svg class="trail" viewBox="0 0 1000 1000" preserveAspectRatio="none"><path d="${d}"/></svg>
+   <div class="journeyGrid">`;
+ lessons.forEach((L,l)=>{
+   let o=lessonOpen(s,l),done=!!st.lessons[key(s,l)],a=st.attempts[key(s,l)]||0;
+   let status=done?(st.lessons[key(s,l)]==="mastered"?"🟢 متقنة":"🟠 تحتاج دعم"):`المحاولات ${a}/3`;
+   h+=`<div class="stageRow ${l%2===0?"right":"left"}">
+      <button class="lessonCard c${l+1} ${o?"open":"locked"} ${done?"done":""}" ${o?`onclick="openLesson(${s},${l})"`:"disabled"}>
+       <span class="num">${l+1}</span>
+       <span class="state">${done?"🏆":o?"🚩":"🔒"}</span>
+       <strong>${L[0]}</strong>
+       <small>${status}</small>
+      </button>
+   </div>`;
+ });
+ h+=`</div><button class="treasureEnd ${stageDone(s)?"ready":"locked"}" onclick="openTreasure(${s})" ${stageDone(s)?"":"disabled"}>${stageDone(s)?"🎁 افتحي صندوق إنجاز الوحدة":"🔒 صندوق إنجاز الوحدة"}<small>${stageDone(s)?"اكتملت الوحدة — اضغطي لفتح الصندوق":"يُفتح بعد إكمال جميع مراحل الوحدة"}</small></button></div>`;
+ mbody.innerHTML=h; modal.classList.add("show")
+}
+function openLesson(s,l){cur={s,l};let a=st.attempts[key(s,l)]||0,x=st.lessons[key(s,l)];mtitle.textContent=`🚩 ${S[s][2][l][0]}`;mbody.innerHTML=`<div class=qbox><h3>👩‍🎓 ${st.name}</h3><p>هذه محطة الدرس رقم ${l+1} داخل ${S[s][0]}.</p><p><b>المحاولة التالية: ${Math.min(a+1,3)} من 3</b></p>${x?`<p><span class="tag ${x==="mastered"?"green":"orange"}">${x==="mastered"?"متقنة":"تحتاج دعم"}</span></p>`:""}<button class=primary onclick=startLesson(${s},${l})>${x?"🔁 أعيدي التحدي":"🎯 ابدئي تحدي الدرس"}</button></div>`}
+function startLesson(s,l){cur={s,l,q:0,score:0};let k=key(s,l);if(!st.lessons[k])st.attempts[k]=(st.attempts[k]||0)+1;save();showQ()}
+function showQ(){let {s,l,q}=cur,Q=S[s][2][l][1];if(q>=Q.length)return finishLesson();let z=Q[q];mbody.innerHTML=`<div class=qbox><b>👩‍🎓 ${st.name} • المحاولة ${st.attempts[key(s,l)]}/3</b><h2>${S[s][2][l][0]}</h2><div class=question>${q+1}. ${z[0]}</div><div class=opts>${z[1].map((o,i)=>`<button class=opt onclick=pick(${i})>${o}</button>`).join("")}</div><p>السؤال ${q+1} من ${Q.length}</p></div>`}
+function pick(i){let {s,l,q}=cur,z=S[s][2][l][1][q],b=document.querySelectorAll(".opt");b.forEach(x=>x.disabled=true);if(i===z[2]){cur.score++;st.points+=5;b[i].style.borderColor="#4caf78";sfx("correct")}else{b[i].style.borderColor="#d85a5a";b[z[2]].style.borderColor="#4caf78";sfx("wrong")}save();setTimeout(()=>{cur.q++;showQ()},400)}
+function finishLesson(){let {s,l,score}=cur,k=key(s,l),tot=S[s][2][l][1].length,a=st.attempts[k],pct=score/tot,ok=pct>=.75;if(ok){if(!st.lessons[k])st.points+=a===1?15:a===2?10:5;st.lessons[k]="mastered"}else if(a>=3)st.lessons[k]="passed";st.best[k]=Math.max(st.best[k]||0,Math.round(pct*100));if(st.lessons[k]&&stageDone(s)&&st.stage<8)st.stage=Math.max(st.stage,s+2);save();if(st.lessons[k])sendResult(s,l);if(ok||a>=3)sfx(stageDone(s)?"win":"correct");render();let unlocked=!!st.lessons[k];mbody.innerHTML=`<div class=result><div style="font-size:55px">${ok?"🎉":a>=3?"🔓":"💪"}</div><h2>${ok?"تم اجتياز محطة الدرس!":a>=3?"فُتحت محطة الدرس التالية":"المحطة تحتاج محاولة أخرى"}</h2><p>${st.name}، نتيجتكِ <b>${score}/${tot}</b> (${Math.round(pct*100)}%)</p>${ok?`<span class="tag green">🟢 متقنة من المحاولة ${a}</span>`:a>=3?`<span class="tag orange">🟠 تحتاج دعم — استمري في الطريق</span>`:`<p>بقيت ${3-a} محاولة.</p><button class=primary onclick=startLesson(${s},${l})>🔁 حاولي مرة أخرى</button>`}<p>${unlocked&&!stageDone(s)?"🚩 تم فتح محطة الدرس التالية!":stageDone(s)?"🏆 اكتملت الوحدة وفتح الطريق للوحدة التالية!":""}</p><button class=secondary onclick=openStage(${s})>🛣️ العودة لطريق الوحدة</button></div>`}
+
+let soundOn=true;
+function tone(freq=440,dur=.12,type="sine",vol=.05){
+  if(!soundOn)return;
+  try{
+    const A=window.AudioContext||window.webkitAudioContext,a=new A(),o=a.createOscillator(),g=a.createGain();
+    o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,a.currentTime);
+    g.gain.exponentialRampToValueAtTime(.001,a.currentTime+dur);
+    o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+dur);
+  }catch(e){}
+}
+function sfx(kind){
+  if(kind==="correct"){tone(660,.09,"sine",.055);setTimeout(()=>tone(880,.12,"sine",.05),85)}
+  if(kind==="wrong"){tone(220,.16,"triangle",.045)}
+  if(kind==="win"){tone(523,.12,"sine",.055);setTimeout(()=>tone(659,.12,"sine",.055),120);setTimeout(()=>tone(784,.22,"sine",.06),240)}
+  if(kind==="treasure"){tone(523,.1,"sine",.06);setTimeout(()=>tone(659,.1,"sine",.06),100);setTimeout(()=>tone(784,.1,"sine",.06),200);setTimeout(()=>tone(1047,.28,"sine",.07),300)}
+}
+function openTreasure(s){
+  if(!stageDone(s))return;
+  sfx("treasure");
+  const mastered=S[s][2].filter((_,l)=>st.lessons[key(s,l)]==="mastered").length;
+  const total=S[s][2].length;
+  mbody.innerHTML=`<div class="result treasureOpen"><div class="bigTreasure">🎁✨</div><h2>أحسنتِ يا ${st.name}!</h2><p>أكملتِ <b>${S[s][0]}</b></p><div class="achievementMedal">🏅 إنجاز جديد</div><p>أتقنتِ ${mastered} من ${total} مراحل • مجموع نقاطكِ ⭐ ${st.points}</p><button class="primary" onclick="closeM()">🚀 تابعي الرحلة</button></div>`;
+}
+function summary(){mtitle.textContent="📊 سجل إنجاز "+st.name;let h=`<div class=result><h2>⭐ ${st.points} نقطة</h2></div>`;S.forEach((s,i)=>{h+=`<div class=qbox><h3>${s[1]} ${s[0]}</h3>`;s[2].forEach((L,l)=>{let k=key(i,l),x=st.lessons[k],a=st.attempts[k]||0;h+=`<p>${x==="mastered"?"🟢":x==="passed"?"🟠":"⚪"} ${L[0]} — ${a} محاولة ${st.best[k]!=null?"• "+st.best[k]+"%":""}</p>`});h+="</div>"});mbody.innerHTML=h;modal.classList.add("show")}
+function closeM(){modal.classList.remove("show");render()}load();
+</script></body></html>
